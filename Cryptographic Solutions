@@ -1,0 +1,494 @@
+CompTIA Security+
+Cryptographic Solutions
+Introduction
+SY0-701 Cryptography Digital Signature Private and Public Key Pair Certificate Signing Request (CSR) Certificate Authority (CA)
+Welcome to the Cryptographic Solutions Practice Lab. In this module, you will be provided with the instructions and devices needed to develop your hands-on skills.
+
+Cryptography provides the tools and techniques necessary to ensure the confidentiality, integrity, authenticity, and availability of data in the network. It forms the backbone of cybersecurity strategies, enabling safe and secure communication, transactions, and data management.
+
+Two prominent cryptographic solutions used throughout the network are Digital Signatures and Certificates. In this module, you will explore how to create a digital signature and certificate signing request manually.
+
+Getting Started
+If this is your first time using Practice Labs, please watch our Getting Started video below.
+
+
+Learning Outcomes
+In this module, you will complete the following exercises:
+
+Exercise 1 - Create and Verify a Digital Signature
+Exercise 2 - Create and Approve a Certificate Signing Request
+After completing this module, you should be able to:
+
+Create a Private and Public Key Pair
+Create a Digital Signature
+Receive and Verify a Digital Signature
+Observe a Signature Verification Failure
+Create a Certificate Signing Request (CSR)
+Receive and Approve a CSR as a Certificate Authority (CA)
+Exam Objectives
+The following exam objectives are covered in this module:
+
+1.4 Explain the importance of using appropriate cryptographic solutions
+
+Public key infrastructure (PKI)
+Encryption
+Hashing
+Digital Signatures
+Certificates
+Lab Duration
+It will take approximately 1 hour to complete this lab.
+
+
+
+
+
+
+
+
+
+
+
+
+Exercise 1 - Create and Verify a Digital Signature
+A digital signature is a cryptographic solution used to verify the authenticity and integrity of digital documents, messages, or transactions. It serves a similar purpose to a handwritten signature on a physical document. A digital signature provides assurance that the signer's identity is legitimate and provides non-repudiation for the sender.
+
+In this exercise, you will create a digital signature and send it to Bob for verification as the user, Alice.
+
+Learning Outcomes
+After completing this exercise, you should be able to:
+
+Create a Private and Public Key Pair
+Create a Digital Signature
+Receive and Verify a Digital Signature
+Observe a Signature Verification Failure
+Your Devices
+You will be using the following devices in this lab. Please power these on now.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+ACIALMA - Alma Linux 9.1 - Stand-alone Linux Server
+Task 1 - Create a Private and Public Key Pair
+A public key and a private key are the fundamental components of asymmetric encryption, enabling cryptographic operations such as encryption, decryption, and digital signatures. OpenSSL is an open-source software library that provides cryptographic functions and tools for securing communications and data, offering features related to encryption, decryption, digital signatures, and certificates.
+
+In this task, you will create a private and public key pair using OpenSSL.
+
+Step 1
+Connect to ACIALMA.
+
+Select Terminal on the desktop.
+
+Figure 1.1 Screenshot of ACIALMA: Displaying the desktop and selecting the Terminal.
+Figure 1.1 Screenshot of ACIALMA: Displaying the desktop and selecting the Terminal.
+Step 2
+In the Terminal window, type the following and press Enter:
+
+mkdir Module_1 && cd Module_1
+Figure 1.2 Screenshot of ACIALMA: Displaying the Terminal and creating, then navigating to the Module_1 folder.
+Figure 1.2 Screenshot of ACIALMA: Displaying the Terminal and creating, then navigating to the Module_1 folder.
+Step 3
+In the Terminal window, type the following and press Enter:
+
+mkdir Digital_Signature && cd Digital_Signature
+Figure 1.3 Screenshot of ACIALMA: Displaying the Terminal and creating then navigating to the Digital Signature folder.
+Figure 1.3 Screenshot of ACIALMA: Displaying the Terminal and creating then navigating to the Digital Signature folder.
+Step 4
+In the Terminal window, type the following and press Enter:
+
+mkdir Alice Bob
+Figure 1.4 Screenshot of ACIALMA: Displaying the Terminal and creating a folder for Alice and Bob.
+Figure 1.4 Screenshot of ACIALMA: Displaying the Terminal and creating a folder for Alice and Bob.
+Step 5
+In the Terminal window, type the following and press Enter:
+
+cd Alice
+Figure 1.5 Screenshot of ACIALMA: Displaying the Terminal and navigating to the Alice folder.
+Figure 1.5 Screenshot of ACIALMA: Displaying the Terminal and navigating to the Alice folder.
+Step 6
+In the Terminal window, type the following and press Enter:
+
+openssl genpkey -algorithm RSA -out alice_privatekey.pem
+Figure 1.6 Screenshot of ACIALMA: Displaying the Terminal and creating a private key.
+Figure 1.6 Screenshot of ACIALMA: Displaying the Terminal and creating a private key.
+Note: This OpenSSL command creates a private key. The RSA algorithm has been specified as the name of the resulting private key file: alice_privatekey.pem. As a reminder, in Linux, the suffix .pem does not define the file type but is used as a convention to identify the type of file to the user. In this case, the private key is in a PEM format.
+Step 7
+In the Terminal window, type the following and press Enter:
+
+openssl rsa -in alice_privatekey.pem -out alice_publickey.pem -pubout -outform PEM
+Figure 1.7 Screenshot of ACIALMA: Displaying the Terminal and creating a public key.
+Figure 1.7 Screenshot of ACIALMA: Displaying the Terminal and creating a public key.
+Step 8
+This OpenSSL command creates a public key for Alice, which uses the previously created private key as input. This ensures the mathematical connection between the private and public key pair. The public key that is created is also in a PEM format.
+
+Figure 1.8 Screenshot of ACIALMA: Displaying the command output in the Terminal window.
+Figure 1.8 Screenshot of ACIALMA: Displaying the command output in the Terminal window.
+Keep the Terminal window open in  .
+Task 2 - Create a Digital Signature
+Digital signatures are used in secure email communication, electronic contracts, online transactions, software distribution, and any situation where proving the authenticity and integrity of digital content is important.
+
+In this task, you will create a digital signature using OpenSSL.
+
+Step 1
+Ensure you are connected to  and the Terminal window is open.
+
+In the Terminal window, type the following and press Enter:
+
+echo "This is Alice's digest." > alice_digest.txt
+Figure 1.9 Screenshot of ACIALMA: Displaying the Terminal and creating a message digest.
+Figure 1.9 Screenshot of ACIALMA: Displaying the Terminal and creating a message digest.
+Note: The digest is a file that will be hashed and encrypted by Alice's private key. It will also be sent in plain text to Bob so that he can hash the file and compare his result to the encrypted hash in the digital signature.
+Step 2
+In the Terminal window, type the following and press Enter:
+
+openssl dgst -sha256 -sign alice_privatekey.pem -out alice_signature.bin alice_digest.txt
+Figure 1.10 Screenshot of ACIALMA: Displaying the Terminal and creating a digital signature.
+Figure 1.10 Screenshot of ACIALMA: Displaying the Terminal and creating a digital signature.
+Note: This command creates Alice's digital signature by hashing the alice_digest.txt file and encrypting the hash output with alice_privatekey.pem. The resulting file, the signature file (alice_signature.bin), is in a binary format.
+Step 3
+In the Terminal window, type the following and press Enter:
+
+ls
+Figure 1.11 Screenshot of ACIALMA: Displaying the Terminal and entering the&quot; ls&quot; command to view the contents of the folder.
+Figure 1.11 Screenshot of ACIALMA: Displaying the Terminal and entering the" ls" command to view the contents of the folder.
+Step 4
+You can view the folder contents to understand which files have been created so far and determine which files will be sent to Bob for signature verification.
+
+Figure 1.12 Screenshot of ACIALMA: Displaying the Terminal and viewing the contents of the folder.
+Figure 1.12 Screenshot of ACIALMA: Displaying the Terminal and viewing the contents of the folder.
+Keep the Terminal window open in  .
+Task 3 - Receive and Verify a Digital Signature
+Verifying a digital signature requires using the signer's public key and a hash digest from the signer to validate the authenticity and integrity of a digital document or message that has been signed using the signer's private key.
+
+In this Task, receive and, using OpenSSL, verify the digital signature that has been created in Tasks 1 and 2.
+
+Step 1
+In ACIALMA, the Terminal window is open.
+
+In the Terminal window, type the following and press Enter:
+
+cp alice_publickey.pem alice_signature.bin alice_digest.txt /home/aciadmin/Module_1/Digital_Signature/Bob
+Figure 1.13 Screenshot of ACIALMA: Displaying the Terminal and simulating Alice sending Bob her digital signature.
+Figure 1.13 Screenshot of ACIALMA: Displaying the Terminal and simulating Alice sending Bob her digital signature.
+Note: This step simulates sending Bob the files required to verify Alice's digital signature: Alice's public key, the signature file, and the digest.
+Step 2
+In the Terminal window, type the following and press Enter:
+
+cd /home/aciadmin/Module_1/Digital_Signature/Bob
+Figure 1.14 Screenshot of ACIALMA: Displaying the Terminal and navigating to Bob&#39;s folder and assuming the role of Bob.
+Figure 1.14 Screenshot of ACIALMA: Displaying the Terminal and navigating to Bob's folder and assuming the role of Bob.
+Step 3
+In the Terminal window, type the following and press Enter:
+
+ls
+Figure 1.15 Screenshot of ACIALMA: Displaying the Terminal and entering the&quot; ls&quot; command to view the contents of the folder.
+Figure 1.15 Screenshot of ACIALMA: Displaying the Terminal and entering the" ls" command to view the contents of the folder.
+Note: View the folder contents to ensure the files intended to be sent to Bob have been received.
+Step 4
+In the Terminal window, type the following and press Enter:
+
+openssl dgst -sha256 -verify alice_publickey.pem -signature alice_signature.bin alice_digest.txt
+Figure 1.16 Screenshot of ACIALMA: Displaying the Terminal and verifying the digital signature.
+Figure 1.16 Screenshot of ACIALMA: Displaying the Terminal and verifying the digital signature.
+Step 5
+This command verifies Alice's digital signature. Alice's digital signature is decrypted with her public key to reveal her hash of the digest file. Concurrently, Bob uses the SHA-256 algorithm (the same as Alice) to hash the plaintext digest file that Alice sent. The two resulting hashes are compared, and since they match, "Verified OK" is outputted to the command line, indicating the digital signature has been verified.
+
+Figure 1.17 Screenshot of ACIALMA: Displaying the command output in the Terminal window.
+Figure 1.17 Screenshot of ACIALMA: Displaying the command output in the Terminal window.
+Keep the Terminal window open in  .
+Task 4 - Observe a Signature Verification Failure
+If the signature were not signed by the signer's actual private key, if there was a change in the signer's message digest, or if the signer's public key was not authentic, the signature verification would fail, alerting the receiver of a potential compromise of the received information.
+
+In this task, you will modify the signer's message digest and observe a signature verification failure.
+
+Step 1
+Ensure you are connected to  and the Terminal window is open.
+
+In the Terminal window, type the following and press Enter:
+
+echo "This is a change to the digest." > alice_digest.txt
+Figure 1.18 Screenshot of ACIALMA: Displaying the Terminal and verifying the digital signature.
+Figure 1.18 Screenshot of ACIALMA: Displaying the Terminal and verifying the digital signature.
+Note: The digest is being intentionally changed here to cause a verification failure.
+Step 2
+In the Terminal window, type the following and press Enter:
+
+openssl dgst -sha256 -verify alice_publickey.pem -signature alice_signature.bin alice_digest.txt
+Figure 1.19 Screenshot of ACIALMA: Displaying the Terminal and verifying the digital signature, which will fail.
+Figure 1.19 Screenshot of ACIALMA: Displaying the Terminal and verifying the digital signature, which will fail.
+Step 3
+As expected, a Verification failure occurs when verifying the digital signature with a changed digest.
+
+Figure 1.20 Screenshot of ACIALMA: Displaying the output of the command in the Terminal window.
+Figure 1.20 Screenshot of ACIALMA: Displaying the output of the command in the Terminal window.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exercise 2 - Create and Approve a Certificate Signing Request
+A Certificate Signing Request (CSR) is a digital document, which, in this case, will be generated by a fictional company called SecPlusLLC. The company creates a certificate signing request to receive a digital certificate from a Certificate Authority (CA). Digital certificates are used to establish the identity of an entity and enable secure communication over networks and the Internet.
+
+In this exercise, you will create a Certificate Signing Request as SecPlusLLC, and then, as the Certificate Authority, approve and sign the request, providing a signed certificate back to SecPlusLLC.
+
+Learning Outcomes
+After completing this exercise, you should be able to:
+
+Create a Certificate Signing Request (CSR)
+Receive and Approve a CSR as a Certificate Authority (CA)
+Your Devices
+You will be using the following devices in this lab. Please power these on now.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+ACIALMA - Alma Linux 9.1 - Stand-alone Linux Server
+Task 1 - Create a Certificate Signing Request (CSR)
+The opening steps of obtaining a signed certificate include generating a private and public key pair and then creating and sending a CSR to a Certificate Authority.
+
+In this task, you will create a CSR as the company SecPlusLLC.
+
+Step 1
+Connect to ACIALMA.
+
+Click the Activities menu and then select Terminal.
+
+Due to inactivity, you may be required to enter the  password: Passw0rd.
+Figure 2.1 Screenshot of ACIALMA: Displaying the desktop and selecting the Terminal.
+Figure 2.1 Screenshot of ACIALMA: Displaying the desktop and selecting the Terminal.
+Step 2
+In the Terminal window, type the following and press Enter:
+
+cd Module_1
+Figure 2.2 Screenshot of ACIALMA: Displaying the Terminal and navigating to the Module_1 folder.
+Figure 2.2 Screenshot of ACIALMA: Displaying the Terminal and navigating to the Module_1 folder.
+Step 3
+In the Terminal window, type the following and press Enter:
+
+mkdir CSR && cd CSR
+Figure 2.3 Screenshot of ACIALMA: Displaying the Terminal and creating, then navigating to the CSR folder.
+Figure 2.3 Screenshot of ACIALMA: Displaying the Terminal and creating, then navigating to the CSR folder.
+Step 4
+In the Terminal window, type the following and press Enter:
+
+mkdir SecPlusLLC && cd SecPlusLLC
+Figure 2.4 Screenshot of ACIALMA: Displaying the Terminal and creating then navigating to the SecPlusLLC folder.
+Figure 2.4 Screenshot of ACIALMA: Displaying the Terminal and creating then navigating to the SecPlusLLC folder.
+Step 5
+In the Terminal window, type the following and press Enter:
+
+openssl req -newkey rsa:2048 -keyout SecPlusLLC_privatekey.pem -out SecPlusLLC.csr
+Figure 2.5 Screenshot of ACIALMA: Displaying the Terminal and creating a private key and certificate signing request.
+Figure 2.5 Screenshot of ACIALMA: Displaying the Terminal and creating a private key and certificate signing request.
+Note: This step creates an RSA 2048-bit private key for the SecPlusLLC company. The suffix .csr indicates that this file will be the certificate signing request file.
+Step 6
+In the Terminal window, type the following for the Enter PEM pass phrase and the Verifying - Enter PEM pass phrase prompts:
+
+SecPlusLLC
+Press Enter.
+
+Figure 2.6 Screenshot of ACIALMA: Displaying the Terminal and entering, then verifying the passphrase.
+Figure 2.6 Screenshot of ACIALMA: Displaying the Terminal and entering, then verifying the passphrase.
+Step 7
+In the Terminal window, type the following and press Enter:
+
+Country Name: US
+State or Province Name: Colorado
+Locality Name: Denver
+Organization Name: SecPlusLLC
+Organizational Unit Name: admin
+Common Name: SecPlus Student
+email address: admin@SecPlusLLC.com
+Figure 2.7 Screenshot of ACIALMA: Displaying the Terminal and entering information into the certificate signing request.
+Figure 2.7 Screenshot of ACIALMA: Displaying the Terminal and entering information into the certificate signing request.
+Note: The information entered in this step will be used by the Certificate Authority to conduct a Domain Validation.
+Step 8
+In the Terminal window, press Enter twice on the 'extra' certificate attributes.
+
+Figure 2.8 Screenshot of ACIALMA: Displaying the Terminal and entering information into the certificate signing request.
+Figure 2.8 Screenshot of ACIALMA: Displaying the Terminal and entering information into the certificate signing request.
+Step 9
+In the Terminal window, type the following and press Enter:
+
+cat SecPlusLLC.csr
+Figure 2.9 Screenshot of ACIALMA: Displaying the Terminal and viewing the certificate.
+Figure 2.9 Screenshot of ACIALMA: Displaying the Terminal and viewing the certificate.
+Note: Notice the certificate signing request is displayed in a base 64 format.
+Step 10
+In the Terminal window, type the following and press Enter:
+
+mkdir /home/aciadmin/Module_1/CSR/CA && cp SecPlusLLC.csr /home/aciadmin/Module_1/CSR/CA
+Figure 2.10 Screenshot of ACIALMA: Displaying the Terminal, creating a CA folder and then copying the certificate to the CA folder.
+Figure 2.10 Screenshot of ACIALMA: Displaying the Terminal, creating a CA folder and then copying the certificate to the CA folder.
+Step 11
+This step simulates sending the certificate signing request to the Certificate Authority.
+
+Figure 2.11 Screenshot of ACIALMA: Displaying the Terminal window.
+Figure 2.11 Screenshot of ACIALMA: Displaying the Terminal window.
+Keep the Terminal window open in  .
+Task 2 - Receive and Approve a CSR as a Certificate Authority (CA)
+Upon receipt of a CSR, a Certificate Authority (CA) will conduct a verification to ensure the authenticity and legitimacy of the entity requesting the digital certificate. The extent of the verification process depends on the type of certificate being requested. Different levels of validation, such as domain validation and extended validation, require varying degrees of scrutiny. Once validation is complete, the Certificate Authority will sign the CSR with their private key and return a signed certificate to the requesting entity.
+
+In this task, you will receive and approve a CSR from SecPlusLLC as a Certificate Authority.
+
+Step 1
+Ensure you are connected to  and the Terminal window is open.
+
+In the Terminal window, type the following and press Enter:
+
+cd .. && cd CA
+Figure 2.12 Screenshot of ACIALMA: Displaying the Terminal and navigating to the CA folder.
+Figure 2.12 Screenshot of ACIALMA: Displaying the Terminal and navigating to the CA folder.
+Step 2
+In the Terminal window, type the following and press Enter:
+
+openssl genpkey -algorithm RSA -out CA_privatekey.pem
+Figure 2.13 Screenshot of ACIALMA: Displaying the Terminal and creating a private key for the CA.
+Figure 2.13 Screenshot of ACIALMA: Displaying the Terminal and creating a private key for the CA.
+Note: A Certificate Authority would already have a private key of their own for signing certificates. In this step, we are creating a key for our CertAuth CA.
+Step 3
+In the Terminal window, type the following and press Enter:
+
+openssl req -newkey rsa:2048 -nodes -keyout CA_privatekey.pem -x509 -days 1999 -out SecPlusLLC.crt
+Figure 2.14 Screenshot of ACIALMA: Displaying the Terminal and signing the SecPlusLLC certificate.
+Figure 2.14 Screenshot of ACIALMA: Displaying the Terminal and signing the SecPlusLLC certificate.
+Note: Once the Domain Validation is complete, the certificate signing request can be signed. This step signs the certificate signing request with the CA's private key and creates a signed certificate that can be returned to the SecPlusLLC company.
+Step 4
+In the Terminal window, type the following and press Enter:
+
+Country Name: US
+State or Province Name: New York
+Locality Name: New York City
+Organization Name: CertAuth
+Organizational Unit Name: admin
+Common Name: admin
+email address: admin@certauth.com
+Figure 2.15 Screenshot of ACIALMA: Displaying the Terminal and entering the CA information into the certificate.
+Figure 2.15 Screenshot of ACIALMA: Displaying the Terminal and entering the CA information into the certificate.
+Note: This information about the CA is included in the CA signed certificate.
+Step 5
+In the Terminal window, type the following and press Enter:
+
+cat SecPlusLLC.crt
+Figure 2.16 Screenshot of ACIALMA: Displaying the Terminal and viewing the SecPlusLLC.crt certificate.
+Figure 2.16 Screenshot of ACIALMA: Displaying the Terminal and viewing the SecPlusLLC.crt certificate.
+Note: The signed certificate is in a base 64 format.
+Step 6
+In the Terminal window, type the following and press Enter:
+
+cp SecPlusLLC.crt /home/aciadmin/Module_1/CSR/SecPlusLLC
+Figure 2.17 Screenshot of ACIALMA: Displaying the Terminal and simulating sending the signed certificate back to SecPlusLLC by copying the certificate to the SecPlusLLC folder.
+Figure 2.17 Screenshot of ACIALMA: Displaying the Terminal and simulating sending the signed certificate back to SecPlusLLC by copying the certificate to the SecPlusLLC folder.
+Note: This step simulates the CA sending the signed certificate back to the SecPlusLLC company.
+Step 7
+In the Terminal window, type the following and press Enter:
+
+ls -la /home/aciadmin/Module_1/CSR/SecPlusLLC
+Figure 2.18 Screenshot of ACIALMA: Displaying the Terminal and viewing the SecPlusLLC folder to confirm receipt of the signed certificate.
+Figure 2.18 Screenshot of ACIALMA: Displaying the Terminal and viewing the SecPlusLLC folder to confirm receipt of the signed certificate.
+Step 8
+This step confirms that the signed certificate (SecPlusLLC.crt) from the CA was received by SecPlusLLC.
+
+Figure 2.19 Screenshot of ACIALMA: Displaying the Terminal and viewing the command&#39;s output.
+Figure 2.19 Screenshot of ACIALMA: Displaying the Terminal and viewing the command's output.
+Close the Terminal window.
+Keep all devices that you have powered on in their current state and proceed to the Review section.
+  
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Review
+Well done, you have completed the Cryptographic Solutions Practice Lab.
+
+As with many Information Technology tasks, there are automated tools that can assist and streamline the process. In this lab, all tasks were completed manually using OpenSSL. This was done intentionally to provide a full understanding of the steps involved in digital signatures and certificate approval.
+
+Summary
+You completed the following exercises:
+
+Exercise 1 - Create and Verify a Digital Signature
+Exercise 2 - Create and Approve a Certificate Signing Request
+You should now be able to:
+
+Create a Private and Public Key Pair
+Create a Digital Signature
+Receive and Verify a Digital Signature
+Observe a Signature Verification Failure
+Create a Certificate Signing Request (CSR)
+Receive and Approve a CSR as a Certificate Authority (CA)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
