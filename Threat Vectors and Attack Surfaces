@@ -1,0 +1,699 @@
+Welcome to the Threat Vectors and Attack Surfaces Practice Lab. In this module, you will be provided with the instructions and devices needed to develop your hands-on skills.
+
+Identifying threat vectors and attack surfaces is critical to network security. Understanding how to identify indicators of attack and vulnerable applications enables the administrator to apply mitigations and act proactively to protect the network environment.
+
+In this module, you will identify potential attack surfaces and mitigate them.
+
+Getting Started
+If this is your first time using Practice Labs, please watch our Getting Started video below.
+
+
+Learning Outcomes
+In this module, you will complete the following exercises:
+
+Exercise 1 - Open Service Ports
+Exercise 2 - Default Credentials
+Exercise 3 - Vulnerable Applications
+After completing this module, you should be able to:
+
+Discover Unnecessary Open Ports
+Close Unnecessary Open Ports
+Discover the Guest Account
+Disable the Guest Account
+Discover a Recently Installed Application
+Simulate an Attack on the Vulnerable Application
+Observe Indicators of Attack
+Exam Objectives
+The following exam objectives are covered in this module:
+
+1.2 Summarize fundamental security concepts
+
+Authentication, Authorization, and Accounting (AAA)
+2.2 Explain common threat vectors and attack surfaces
+
+Message-based
+File-based
+Vulnerable software
+Unsupported systems and applications
+Open service ports
+Default credentials
+Human vectors/social engineering
+2.4 Given a scenario, analyze indicators of malicious activity
+
+Indicators
+Lab Duration
+It will take approximately 1 hour to complete this lab.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exercise 1 - Open Service Ports
+Open service ports provide a communication path for services hosted on a machine. Opening service ports is critical for normal and effective network operations. However, open service ports may also serve as a path for attack, especially if they are unnecessarily open and unmanaged.
+
+Nmap is an open-source network scanning tool that can be used to identify open ports on a machine.
+
+In this exercise, you will use nmap to discover unnecessary open ports on ACIDM01, then close those ports using the Windows Defender Firewall.
+
+Learning Outcomes
+After completing this exercise, you should be able to:
+
+Discover Unnecessary Open Ports
+Close Unnecessary Open Ports
+Your Devices
+You will be using the following devices in this lab. Please power these on now.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+ACIDM01 - Windows Server 2022 - Domain Member Server
+ACIKALI - Kali Purple 2023.1 - Stand-alone Linux Workstation
+Task 1 - Discover Unnecessary Open Ports
+An unnecessary open port is a network port that is open and accessible, but that serves no legitimate purpose or function on the host (in the context of the network configuration). Unnecessary open ports provide potential entry points for an attacker and should be discovered and shut.
+
+In this task, you will use nmap to discover unnecessary open ports.
+
+Step 1
+Connect to ACIDM01.
+
+Click the Start charm, then select XAMPP > XAMPP Control Panel.
+
+Figure 1.1 Screenshot of ACIDM01: Displaying the desktop and selecting the XAMPP Control Panel.
+Figure 1.1 Screenshot of ACIDM01: Displaying the desktop and selecting the XAMPP Control Panel.
+Note: XAMPP is a cross-platform, open-source local web server environment for testing and developing web applications. It bundles Apache, MySQL, PHP and Perl capabilities into one package.
+Step 2
+In the XAMPP Control Panel window, select Start for the Apache server.
+
+Figure 1.2 Screenshot of ACIDM01: Displaying the XAMPP Control Panel and starting Apache.
+Figure 1.2 Screenshot of ACIDM01: Displaying the XAMPP Control Panel and starting Apache.
+Step 3
+In the XAMPP Control Panel, select Start for the MySQL server.
+
+Figure 1.3 Screenshot of ACIDM01: Displaying the XAMPP Control Panel and starting MySQL.
+Figure 1.3 Screenshot of ACIDM01: Displaying the XAMPP Control Panel and starting MySQL.
+Note: Observe the Apache server is operating on ports 80 and 443, and the MySQL server is running on port 3306. These will be the unnecessary open ports for the remainder of this exercise.
+Step 4
+Close the XAMPP Control Panel.
+
+Figure 1.4 Screenshot of ACIDM01: Displaying closing the XAMPP Control Panel.
+Figure 1.4 Screenshot of ACIDM01: Displaying closing the XAMPP Control Panel.
+Step 5
+Connect to  .
+
+On the Desktop Toolbar, select Terminal Emulator.
+
+Figure 1.5 Screenshot of ACIKALI: Displaying the desktop and selecting the Terminal Emulator.
+Figure 1.5 Screenshot of ACIKALI: Displaying the desktop and selecting the Terminal Emulator.
+Step 6
+In the Terminal window, type the following and press Enter:
+
+nmap -Pn 192.168.0.2
+Figure 1.6 Screenshot of ACIKALI: Displaying the Terminal and conducting a port scan on ACIDM01.
+Figure 1.6 Screenshot of ACIKALI: Displaying the Terminal and conducting a port scan on ACIDM01.
+Note: For our scenario, ACIDM01 is not meant to run a web server or host a MySQL database. These are considered unnecessary services and have unnecessary ports open to support them.
+The -Pn switch is used to bypass the host discovery step of the nmap port scan.
+Step 7
+In the Terminal window, type the following and press Enter:
+
+nmap -Pn -A -p 80,443,3306 192.168.0.2
+Figure 1.7 Screenshot of ACIKALI: Displaying the Terminal and running an aggressive nmap scan on the suspect open ports.
+Figure 1.7 Screenshot of ACIKALI: Displaying the Terminal and running an aggressive nmap scan on the suspect open ports.
+Note: In order to find out more information about the unexpected open ports, an aggressive (-A) nmap scan is performed. This scan combines four nmap capabilities:
+1) A service version scan
+2) An operating system detection scan
+3) Traceroute
+4) Custom scripts
+This scan is being run on only the three unexpected ports.
+Step 8
+Notice that Apache 2.4.56 is running on ports 80 and 443 and that a MariaDB is running on port 3306. These ports are unnecessarily open and should be closed.
+
+Figure 1.8 Screenshot of ACIKALI: Displaying the output of the nmap command in the Terminal window.
+Figure 1.8 Screenshot of ACIKALI: Displaying the output of the nmap command in the Terminal window.
+Keep the Terminal Emulator window open on  .
+Task 2 - Close Unnecessary Open Ports
+Unnecessary open ports provide potential entry points for an attacker. In this case, ports 80, 443, and 3306 are open, even though there is no intention of ACIDM01 hosting a website. In this case, these ports should be closed.
+
+The Windows Defender Firewall is a built-in security feature that protects the machine from unauthorized access. It acts as a barrier to protect the host from unwanted and unauthorized communication.
+
+In this task, you will use the Windows Defender Firewall to close ports 80, 443, and 3306 on the ACIDM01 machine.
+
+Step 1
+Connect to  .
+
+Click the Start charm and type the following:
+
+windows defender firewall
+Select Windows Defender Firewall with Advanced Security from the Best match pop-up menu.
+
+Figure 1.9 Screenshot of ACIDM01: Displaying selecting Windows Defender Firewall with Advanced Security from the Best match pop-up menu.
+Figure 1.9 Screenshot of ACIDM01: Displaying selecting Windows Defender Firewall with Advanced Security from the Best match pop-up menu.
+Step 2
+In Windows Defender with Advanced Security, select Inbound Rules on the left pane.
+
+Select New Rule in the Actions pane.
+
+Figure 1.10 Screenshot of ACIDM01: Displaying Windows Defender with Advanced Security and selecting Inbound Rules and New Rule.
+Figure 1.10 Screenshot of ACIDM01: Displaying Windows Defender with Advanced Security and selecting Inbound Rules and New Rule.
+Note: ACL rules can be configured for both inbound and outbound traffic. In this case, to close the port, we only need to control inbound traffic.
+Step 3
+In the New Inbound Rule Wizard - Rule Type page, select the radio button next to Port.
+
+Click Next.
+
+Figure 1.11 Screenshot of ACIDM01: Displaying the New Inbound Rule Wizard - Rule Type page, selecting Port, and clicking Next.
+Figure 1.11 Screenshot of ACIDM01: Displaying the New Inbound Rule Wizard - Rule Type page, selecting Port, and clicking Next.
+Step 4
+In the Protocol and Ports page, type the following in the Specific local ports field:
+
+80, 443, 3306
+Click Next.
+
+Figure 1.12 Screenshot of ACIDM01: Displaying the Protocol and Ports page, typing in the ports to be closed and selecting Next.
+Figure 1.12 Screenshot of ACIDM01: Displaying the Protocol and Ports page, typing in the ports to be closed and selecting Next.
+Step 5
+On the Action page, select the radio button next to Block the connection.
+
+Click Next.
+
+Figure 1.13 Screenshot of ACIDM01: Displaying the Action page, selecting the radio button to Block the connection and then selecting Next.
+Figure 1.13 Screenshot of ACIDM01: Displaying the Action page, selecting the radio button to Block the connection and then selecting Next.
+Step 6
+In the Profile page, ensure the Domain, Private, and Public options are ticked.
+
+Click Next.
+
+Figure 1.14 Screenshot of ACIDM01: Displaying the Profile page and selecting Next.
+Figure 1.14 Screenshot of ACIDM01: Displaying the Profile page and selecting Next.
+Note: Windows allows the configuration of three different network environments: the domain, a private, and a public network. In this case, we will apply the inbound rule to all environments.
+Step 7
+In the Name page, type the following in the Name field:
+
+Close unnecessary ports
+Click Finish.
+
+Figure 1.15 Screenshot of ACIDM01: Displaying the Name page, naming the new rule, and selecting Next.
+Figure 1.15 Screenshot of ACIDM01: Displaying the Name page, naming the new rule, and selecting Next.
+Step 8
+Observe the rule at the top of the Inbound Rules list, which has been created to block ports 80, 443, and 3306.
+
+Close the Windows Defender with Advanced Security window.
+
+Figure 1.16 Screenshot of ACIDM01: Displaying and closing Windows Defender with Advanced Security.
+Figure 1.16 Screenshot of ACIDM01: Displaying and closing Windows Defender with Advanced Security.
+Step 9
+Connect to ACIKALI, where the Terminal Emulator window is open.
+
+In the Terminal window, type the following and press Enter:
+
+nmap -Pn 192.168.0.2
+Figure 1.17 Screenshot of ACIKALI: Displaying the Terminal and using nmap to conduct a port scan on ACIDM01.
+Figure 1.17 Screenshot of ACIKALI: Displaying the Terminal and using nmap to conduct a port scan on ACIDM01.
+Step 10
+Notice that ports 80, 443, and 3306 are no longer listed as open ports. They have been closed by the Windows Defender Firewall Rule that was created.
+
+Close the Terminal Emulator window.
+Figure 1.18 Screenshot of ACIKALI: Displaying the output of the nmap command and closing the Terminal.
+Figure 1.18 Screenshot of ACIKALI: Displaying the output of the nmap command and closing the Terminal.
+
+
+
+
+
+
+
+
+
+
+Exercise 2 - Default Credentials
+Default credentials are widely known and predictable. For example, the website cirt.net, which is the Cyber Incident Response Team Network, hosts a Default Password Database comprised of 531 vendors and 2117 default passwords.
+
+Default credentials, when left on vendor equipment, make the equipment an easy target for unauthorized access.
+
+Guest accounts may use default passwords or sometimes no password at all. They are accounts that are intended to provide limited privileges and access to the network. However, from an attacker's perspective, a Guest account is an attack vector.
+
+In this task, you will discover the Guest account on ACIDC01 and disable it.
+
+Learning Outcomes
+After completing this exercise, you should be able to:
+
+Discover the Guest Account
+Disable the Guest Account
+Your Devices
+You will be using the following device in this lab. Please power this on now.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+Task 1 - Discover the Guest Account
+Guest accounts may use default passwords or no password at all.
+
+In this task, you will log into ACIDC01 with the Guest account.
+
+Step 1
+In the Lab Toolbar, select the Lab Settings gear icon.
+
+Figure 2.1 Screenshot of ACI Practice Labs interface: Displaying the ACI Practice Labs platform and selecting the Lab Settings gear icon.
+Figure 2.1 Screenshot of ACI Practice Labs interface: Displaying the ACI Practice Labs platform and selecting the Lab Settings gear icon.
+Step 2
+In the Device settings drop-down, uncheck the box next to Automatically login.
+
+Figure 2.2 Screenshot of ACI Practice Labs interface: Displaying the Device settings drop-down and unselecting the Automatic login option.
+Figure 2.2 Screenshot of ACI Practice Labs interface: Displaying the Device settings drop-down and unselecting the Automatic login option.
+Step 3
+Connect to ACIDC01.
+
+Select Ctrl-Alt-Del from the Menu drop-down menu.
+
+Figure 2.3 Screenshot of ACIDC01: Displaying the Menu drop-down and selecting Ctrl-Alt-Del.
+Figure 2.3 Screenshot of ACIDC01: Displaying the Menu drop-down and selecting Ctrl-Alt-Del.
+Note: This menu allows you to enter commands into the VM. Simply pressing Ctrl-Alt-Del on your keyboard will apply the command to your personal machine, not the VM.
+This step may not be necessary. If you arrive at the ACIPLAB\Administrator login page, move directly to Step 6.
+Step 4
+On the  logout page, select Sign out.
+
+Figure 2.4 Screenshot of ACIDC01: Displaying the logout page and selecting Sign out.
+Figure 2.4 Screenshot of ACIDC01: Displaying the logout page and selecting Sign out.
+Step 5
+On the ACIDC01 - Error page, select the circular arrow icon on the top right-hand corner of the device to reconnect to ACIDC01.
+
+Figure 2.5 Screenshot of ACIDC01: Displaying the ACIDC01 Error page and reconnecting to ACIDC01.
+Figure 2.5 Screenshot of ACIDC01: Displaying the ACIDC01 Error page and reconnecting to ACIDC01.
+Step 6
+On the  login page, select Other user.
+
+Figure 2.6 Screenshot of ACIDC01: Displaying the ACIDC01 login page and selecting Other user.
+Figure 2.6 Screenshot of ACIDC01: Displaying the ACIDC01 login page and selecting Other user.
+Step 7
+On the Other user login page, type the following in the username field (no password will be entered):
+
+Guest
+Click Submit.
+
+Figure 2.7 Screenshot of ACIDC01: Displaying the Other user login page and logging in as Guest with no password.
+Figure 2.7 Screenshot of ACIDC01: Displaying the Other user login page and logging in as Guest with no password.
+Note: Notice that the Guest account is enabled, and no password is required to log on. This is a security vulnerability and should be corrected.
+Step 8
+On ACIDC01, select Ctrl-Alt-Del from the Menu drop-down menu.
+
+Figure 2.8 Screenshot of ACIDC01: Displaying the Menu drop-down menu and selecting Ctrl-Alt-Del.
+Figure 2.8 Screenshot of ACIDC01: Displaying the Menu drop-down menu and selecting Ctrl-Alt-Del.
+Step 9
+On the  logout page, select Sign out.
+
+Figure 2.9 Screenshot of ACIDC01: Displaying the log out page and selecting Sign out.
+Figure 2.9 Screenshot of ACIDC01: Displaying the log out page and selecting Sign out.
+Step 10
+In the Lab Toolbar, select the Lab Settings gear icon.
+
+Figure 2.10 Screenshot of ACI Practice Labs interface: Displaying selecting the Lab Settings gear icon in the Lab Toolbar.
+Figure 2.10 Screenshot of ACI Practice Labs interface: Displaying selecting the Lab Settings gear icon in the Lab Toolbar.
+Step 11
+In the Device settings drop-down menu, check the box next to Automatically login.
+
+Figure 2.11 Screenshot of ACI Practice Labs interface: Displaying selecting the Automatically login checkbox.
+Figure 2.11 Screenshot of ACI Practice Labs interface: Displaying selecting the Automatically login checkbox.
+Step 12
+If required, on the ACIDC01 - Error page, select the circular arrow icon to reconnect to ACIDC01.
+
+Figure 2.12 Screenshot of ACIDC01: Displaying the ACIDC01 - Error page and reconnecting to ACIDC01.
+Figure 2.12 Screenshot of ACIDC01: Displaying the ACIDC01 - Error page and reconnecting to ACIDC01.
+This step may not be necessary if the ACIPLAB\Administrator account is immediately logged back into.
+Task 2 - Disable the Guest Account
+Through the course of standard network management, guest accounts should periodically be reviewed for presence and disabled when found. If a Guest account is required by policy, then Guest accounts should enforce a session timeout policy and should be monitored for malicious activity.
+
+In this task, you will disable the Guest account on ACIDC01.
+
+Step 1
+Connect to ACIDC01.
+
+On the Server Manager window, select Tools, then select Active Directory Users and Computers.
+
+Figure 2.13 Screenshot of ACIDC01: Displaying the Server Manager and selecting Tools, then Active Directory Users and Computers.
+Figure 2.13 Screenshot of ACIDC01: Displaying the Server Manager and selecting Tools, then Active Directory Users and Computers.
+Note: Active Directory Users and Computers is used to manage and administer users, groups, computers, and organizational units within an Active Directory domain.
+Step 2
+In the Active Directory Users and Computers window, select Users in the left pane.
+
+Figure 2.14 Screenshot of ACIDC01: Displaying Active Directory Users and Computers and selecting Users in the left pane.
+Figure 2.14 Screenshot of ACIDC01: Displaying Active Directory Users and Computers and selecting Users in the left pane.
+Note: The Windows Guest account, which is normally disabled, provides limited access to the computer. It will not be configured with a password and is meant for temporary use. It is, however, a security vulnerability.
+Step 3
+In the Active Directory Users and Computers window, right-click on Guest and select Disable Account.
+
+Figure 2.15 Screenshot of ACIDC01: Displaying Active Directory Users and Computers and disabling the Guest account.
+Figure 2.15 Screenshot of ACIDC01: Displaying Active Directory Users and Computers and disabling the Guest account.
+Step 4
+In the Active Directory Domain Services pop-up window, select OK.
+
+Figure 2.16 Screenshot of ACIDC01: Displaying the Active Directory Domain Services pop-up and selecting OK.
+Figure 2.16 Screenshot of ACIDC01: Displaying the Active Directory Domain Services pop-up and selecting OK.
+Step 5
+Close the Active Directory Users and Computers window.
+
+Figure 2.17 Screenshot of ACIDC01: Displaying closing the Active Directory Users and Computers window.
+Figure 2.17 Screenshot of ACIDC01: Displaying closing the Active Directory Users and Computers window.
+Step 6
+Repeat Task 1, Steps 1 - 7, to attempt to log onto the Guest account in ACIDC01.
+
+Notice the account has been disabled message.
+
+Click OK.
+
+Figure 2.18 Screenshot of ACIDC01: Displaying the Other user login page and showing the Guest account is disabled.
+Figure 2.18 Screenshot of ACIDC01: Displaying the Other user login page and showing the Guest account is disabled.
+Step 7
+In the Lab Toolbar, select the Lab Settings gear icon.
+
+In the Device settings drop-down, check the box next to Automatically login.
+
+Figure 2.19 Screenshot of ACI PracticeLabs interface: Displaying the Device settings and selecting the check box for Automatically login.
+Figure 2.19 Screenshot of ACI PracticeLabs interface: Displaying the Device settings and selecting the check box for Automatically login.
+Step 8
+Connect to  .
+
+If required, on the Login page, select the circular arrow icon on the top right-hand corner of the device to reconnect to  .
+
+Figure 2.20 Screenshot of ACIDC01: Displaying the Login page and selecting the circular arrow icon to reconnect to ACIDC01 and automatically log in as the administrator.
+Figure 2.20 Screenshot of ACIDC01: Displaying the Login page and selecting the circular arrow icon to reconnect to ACIDC01 and automatically log in as the administrator. 
+
+
+
+
+
+
+
+
+
+
+
+Exercise 3 - Vulnerable Applications
+Vulnerable applications pose a network risk because they can be exploited by threat actors. Exploitation can lead to security breaches, data loss, malware installation, and unauthorized access.
+
+In this exercise, you will recognize a newly installed application and identify indicators of attempted exploitation.
+
+Learning Outcomes
+After completing this exercise, you should be able to:
+
+Discover a Recently Installed Application
+Simulate an Attack on the Vulnerable Application
+Observe Indicators of Attack
+Your Devices
+You will be using the following devices in this lab. Please power these on now.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+ACIWIN11 - Windows 11 PRO - Domain Member Workstation
+ACIKALI - Kali Purple 2023.1 - Stand-alone Linux Workstation
+Task 1 - Discover a Recently Installed Application
+Controlling application installation is a fundamental security practice that can minimize a network attack surface. In our fictional organization, by policy, users are not permitted to install applications.
+
+In this task, as a network administrator, you will discover an unapproved, recently installed application on ACIWIN11. You will then conduct research to determine that this application has a significant known vulnerability.
+
+Step 1
+Connect to  .
+
+Click the Start charm and type the following:
+
+adobe reader
+Select Adobe Reader from the Best match pop-up menu.
+
+Figure 3.1 Screenshot of ACIWIN11: Displaying selecting Adobe Reader from the Best match pop-up menu.
+Figure 3.1 Screenshot of ACIWIN11: Displaying selecting Adobe Reader from the Best match pop-up menu.
+Step 2
+In the Adobe Reader 8 - License Agreement pop-up window, click Accept.
+
+Figure 3.2 Screenshot of ACIWIN11: Displaying the Adobe Reader 8 - License Agreement pop-up window and selecting Accept.
+Figure 3.2 Screenshot of ACIWIN11: Displaying the Adobe Reader 8 - License Agreement pop-up window and selecting Accept.
+Step 3
+Close the BEYOND ADOBE READER pop-up window.
+
+Figure 3.3 Screenshot of ACIWIN11: Displaying closing the BEYOND ADOBE READER pop-up window.
+Figure 3.3 Screenshot of ACIWIN11: Displaying closing the BEYOND ADOBE READER pop-up window.
+Step 4
+In Adobe Reader, select Help, then select About Adobe Reader 8 from the drop-down menu.
+
+Figure 3.4 Screenshot of ACIWIN11: Displaying Adobe Reader 8 and selecting Help, then About Adobe Reader 8.
+Figure 3.4 Screenshot of ACIWIN11: Displaying Adobe Reader 8 and selecting Help, then About Adobe Reader 8.
+Step 5
+Notice that the version of Adobe installed is ADOBE READER 8, Version 8.1.1.
+
+Click on the red Adobe Reader pop-up window to close it.
+
+Close Adobe Reader.
+
+Figure 3.5 Screenshot of ACIWIN11: Displaying the Adobe Reader pop-up window.
+Figure 3.5 Screenshot of ACIWIN11: Displaying the Adobe Reader pop-up window.
+Step 6
+In the Taskbar, select Microsoft Edge.
+
+Figure 3.6 Screenshot of ACIWIN11: Displaying opening Microsoft Edge from the Taskbar.
+Figure 3.6 Screenshot of ACIWIN11: Displaying opening Microsoft Edge from the Taskbar.
+Step 7
+In Microsoft Edge, type the following URL into the address bar:
+
+https://nvd.nist.gov/vuln/detail/cve-2007-5659
+Press Enter.
+
+Figure 3.7 Screenshot of ACIWIN11: Displaying Edge and opening the NVD website to CVE-2007-5659
+Figure 3.7 Screenshot of ACIWIN11: Displaying Edge and opening the NVD website to CVE-2007-5659
+Note: The process of determining whether a software version is vulnerable is being shortened in this step for simplicity.
+Step 8
+In Microsoft Edge, scroll down to the Severity section, then select CVSS Version 2.0.
+
+Figure 3.8 Screenshot of ACIWIN11: Displaying Edge and selecting CVSS Version 2.0.
+Figure 3.8 Screenshot of ACIWIN11: Displaying Edge and selecting CVSS Version 2.0.
+Step 9
+Since the vulnerability is old, a CVSS Version 3.x score has not been calculated.
+
+Observe the CVSS Version 2.0 score is a 9.3 on a scale of 0 - 10.
+
+Figure 3.9 Screenshot of ACIWIN11: Displaying Edge and viewing the CVSS Version 2.0 Base Score.
+Figure 3.9 Screenshot of ACIWIN11: Displaying Edge and viewing the CVSS Version 2.0 Base Score.
+Step 10
+In Microsoft Edge, scroll down to discover the Known Affected Software Configurations of the vulnerability.
+
+Figure 3.10 Screenshot of ACIWIN11: Displaying Edge and scrolling to the Known Affected Software Configurations section of the page.
+Figure 3.10 Screenshot of ACIWIN11: Displaying Edge and scrolling to the Known Affected Software Configurations section of the page.
+Note: Notice that Adobe Reader Version 8.1.1 is vulnerable. From the network defender's perspective, it would be appropriate at this time to uninstall Adobe Reader 8.1.1 and investigate how the installation occurred and by whom.
+Step 11
+Close Microsoft Edge.
+
+Figure 3.11 Screenshot of ACIWIN11: Displaying closing Microsoft Edge.
+Figure 3.11 Screenshot of ACIWIN11: Displaying closing Microsoft Edge.
+Task 2 - Simulate an Attack on the Vulnerable Application
+Once a vulnerable application is placed on a network or a user installs one, an attacker can craft an exploit.
+
+In this task, simulating an attacker, you will use the Metasploit Framework to craft a malicious PDF and deliver it to ACIWIN11 to attempt an exploit.
+
+Step 1
+Connect to  .
+
+Note: If required, login with the password: Passw0rd.
+In the desktop Toolbar, select Terminal Emulator.
+
+Figure 3.12 Screenshot of ACIKALI: Displaying the desktop and selecting the Terminal Emulator.
+Figure 3.12 Screenshot of ACIKALI: Displaying the desktop and selecting the Terminal Emulator.
+Step 2
+In the Terminal window, type the following and press Enter:
+
+msfconsole
+Figure 3.13 Screenshot of ACIKALI: Displaying the Terminal and starting the Metasploit Framework.
+Figure 3.13 Screenshot of ACIKALI: Displaying the Terminal and starting the Metasploit Framework.
+Note: The Metasploit Framework is an open-source penetration testing framework used to exploit vulnerabilities.
+Step 3
+In the Terminal window, type the following and press Enter:
+
+y
+Figure 3.14 Screenshot of ACIKALI: Displaying the Terminal and selecting yes to delete the existing configuration.
+Figure 3.14 Screenshot of ACIKALI: Displaying the Terminal and selecting yes to delete the existing configuration.
+Step 4
+In the Terminal window, type the following and press Enter:
+
+search adobe 8.1.1
+Figure 3.15 Screenshot of ACIKALI: Displaying the Terminal and searching in the Metasploit Framework for vulnerabilities associated with adobe reader 8.1.1.
+Figure 3.15 Screenshot of ACIKALI: Displaying the Terminal and searching in the Metasploit Framework for vulnerabilities associated with adobe reader 8.1.1.
+Step 5
+In the Terminal window, type the following and press Enter:
+
+use 0
+Figure 3.16 Screenshot of ACIKALI: Displaying the Terminal and selecting the exploit associated with adobe reader 8.1.1.
+Figure 3.16 Screenshot of ACIKALI: Displaying the Terminal and selecting the exploit associated with adobe reader 8.1.1.
+Note: The command ‘use exploit/windows/fileformat/adobe_collectemailinfo’ could also have been used, but since the # 0 was also given to this option, it is simpler to just use the command ‘use 0’.
+Step 6
+In the Terminal window, type the following and press Enter:
+
+show options
+Figure 3.17 Screenshot of ACIKALI: Displaying the Terminal and entering the command to show the exploit options.
+Figure 3.17 Screenshot of ACIKALI: Displaying the Terminal and entering the command to show the exploit options.
+Note: Options are used to customize the exploit for the attack machine being used.
+This exploit will be used to enable the observation of indicators of attack. For this reason, the full exploit process will not be demonstrated, so default options are accepted.
+Step 7
+In the Terminal window, type the following and press Enter:
+
+exploit
+Figure 3.18 Screenshot of ACIKALI: Displaying the Terminal and running the MSF exploit.
+Figure 3.18 Screenshot of ACIKALI: Displaying the Terminal and running the MSF exploit.
+Note: This exploit creates a malicious PDF msf.pdf and places it in the /home/aciadmin/.msf4/local folder.
+Step 8
+In the Terminal window, type the following and press Enter:
+
+exit
+Figure 3.19 Screenshot of ACIKALI: Displaying the Terminal and exiting MSF.
+Figure 3.19 Screenshot of ACIKALI: Displaying the Terminal and exiting MSF.
+Step 9
+In the Terminal window, type the following and press Enter:
+
+cp /home/aciadmin/.msf4/local/msf.pdf .
+Figure 3.20 Screenshot of ACIKALI: Displaying the Terminal and copying the malicious PDF created by MSF to the aciadmin home directory.
+Figure 3.20 Screenshot of ACIKALI: Displaying the Terminal and copying the malicious PDF created by MSF to the aciadmin home directory.
+Note: The cp command copies the malicious PDF from the folder it was created in to the user’s current folder. The ‘.’ represents the current folder.
+Step 10
+On the Desktop Toolbar, select Firefox.
+
+Figure 3.21 Screenshot of ACIKALI: Displaying the desktop and selecting Firefox.
+Figure 3.21 Screenshot of ACIKALI: Displaying the desktop and selecting Firefox.
+Step 11
+In Firefox, select My files.
+
+Figure 3.22 Screenshot of ACIKALI: Displaying Firefox and selecting My files.
+Figure 3.22 Screenshot of ACIKALI: Displaying Firefox and selecting My files.
+Step 12
+In Firefox, in the Upload file section, select Browse.
+
+Figure 3.23 Screenshot of ACIKALI: Displaying Firefox and selecting Browse in the Upload file section.
+Figure 3.23 Screenshot of ACIKALI: Displaying Firefox and selecting Browse in the Upload file section.
+Step 13
+In the File Upload window, select the Home folder on the left pane.
+
+Figure 3.24 Screenshot of ACIKALI: Displaying the File Upload window and selecting the Home folder.
+Figure 3.24 Screenshot of ACIKALI: Displaying the File Upload window and selecting the Home folder.
+Step 14
+In the File Upload window, select the msf.pdf file, then click Open.
+
+Figure 3.25 Screenshot of ACIKALI: Displaying the File Upload window, selecting the msf.pdf file, then selecting Open.
+Figure 3.25 Screenshot of ACIKALI: Displaying the File Upload window, selecting the msf.pdf file, then selecting Open.
+Note: The My Files folder is accessible from any machine in the lab.
+Step 15
+Observe the msf.pdf file has been uploaded to My files. This simulates the delivery mechanism of the exploit to the victim.
+
+Close the Firefox window.
+
+Figure 3.26 Screenshot of ACIKALI: Displaying the msf.pdf file uploaded to My files.
+Figure 3.26 Screenshot of ACIKALI: Displaying the msf.pdf file uploaded to My files.
+Step 16
+Connect to ACIWIN11.
+
+Click the Microsoft Edge icon on the Taskbar.
+
+Figure 3.27 Screenshot of ACIWIN11: Displaying the desktop and selecting Microsoft Edge.
+Figure 3.27 Screenshot of ACIWIN11: Displaying the desktop and selecting Microsoft Edge.
+Step 17
+In Microsoft Edge, select My files.
+
+Figure 3.28 Screenshot of ACIWIN11: Displaying Microsoft Edge and selecting My Files.
+Figure 3.28 Screenshot of ACIWIN11: Displaying Microsoft Edge and selecting My Files.
+Step 18
+In Microsoft Edge, select msf.pdf to download the file.
+
+Figure 3.29 Screenshot of ACIWIN11: Displaying Microsoft Edge and downloading the msf.pdf file.
+Figure 3.29 Screenshot of ACIWIN11: Displaying Microsoft Edge and downloading the msf.pdf file.
+Note: This action simulates the successful delivery of the malicious PDF file to the victim.
+Step 19
+In Microsoft Edge, in the Downloads box, select the Folder icon to Show in Folder.
+
+Figure 3.30 Screenshot of ACIWIN11: Displaying Microsoft Edge and showing the msf.pdf download in a Folder.
+Figure 3.30 Screenshot of ACIWIN11: Displaying Microsoft Edge and showing the msf.pdf download in a Folder.
+Step 20
+In the Downloads window, right-click on the msf.pdf file, then select Open with > Adobe Reader 8.1.
+
+Figure 3.31 Screenshot of ACIWIN11: Displaying the Downloads window and opening the msf.pdf file with Adobe Reader 8.1.
+Figure 3.31 Screenshot of ACIWIN11: Displaying the Downloads window and opening the msf.pdf file with Adobe Reader 8.1.
+Step 21
+In the How do you want to open this file? pop-up window, select Adobe Reader 8.1
+
+Click OK.
+
+Figure 3.32 Screenshot of ACIWIN11: Displaying the How do you want to open this file? pop-up, selecting Adobe Reader 8.1, then selecting OK.
+Figure 3.32 Screenshot of ACIWIN11: Displaying the How do you want to open this file? pop-up, selecting Adobe Reader 8.1, then selecting OK.
+Note: This simulates the victim activating the payload by opening the malicious PDF.
+Step 22
+Observe Adobe Reader, attempt to open the file, then close.
+
+This vulnerability requires the installation of the vulnerable software on a Windows XP operating system. Because this operating system is Windows 11, the exploit will fail. However, indicators of the attack can still be observed.
+
+Figure 3.33 Screenshot of ACIWIN11: Displaying the msf.pdf Adobe Reader window.
+Figure 3.33 Screenshot of ACIWIN11: Displaying the msf.pdf Adobe Reader window.
+Close the Downloads and Microsoft Edge windows.
+Task 3 - Observe Indicators of Attack
+Not all attacks are successful. However, indications of attack, even unsuccessful attacks, must still be identified so the network can be secured.
+
+In this task, you will use Microsoft Event Viewer to discover indicators of attack on Adobe Reader 8.1.1 from a malicious PDF. Though the attack was unsuccessful, the process of an attacker being able to install a vulnerable application and deliver a malicious PDF that was opened indicates there are significant security vulnerabilities that must be addressed.
+
+Step 1
+Connect to ACIWIN11.
+
+Click the Start charm and type the following:
+
+event viewer
+Select Event Viewer from the Best match pop-up menu.
+
+Figure 3.34 Screenshot of ACIWIN11: Displaying selecting Event Viewer from the Best match pop-up menu.
+Figure 3.34 Screenshot of ACIWIN11: Displaying selecting Event Viewer from the Best match pop-up menu.
+Step 2
+In the Event Viewer window, expand the Windows Logs folder in the Event Viewer (Local) pane.
+
+Figure 3.35 Screenshot of ACIWIN11: Displaying the Event Viewer and expanding the Windows Logs folder.
+Figure 3.35 Screenshot of ACIWIN11: Displaying the Event Viewer and expanding the Windows Logs folder.
+Step 3
+In the Event Viewer, select Application in the Event Viewer (Local) pane.
+
+Figure 3.36 Screenshot of ACIWIN11: Displaying the Event Viewer and selecting the Application logs.
+Figure 3.36 Screenshot of ACIWIN11: Displaying the Event Viewer and selecting the Application logs.
+Step 4
+Observe the recent Errors in the Application Logs. Discover in the General description of the log that the application that caused the error was AdobeRd32.exe. This is Adobe Reader 8.1.1, and these errors were caused when the malicious PDF was opened.
+
+Close the Event Viewer window.
+Figure 3.37 Screenshot of ACIWIN11: Displaying closing the Event Viewer window.
+Figure 3.37 Screenshot of ACIWIN11: Displaying closing the Event Viewer window.
+Note: Though this exploit was not successful, the logs provide an indicator of attack. Additionally, even without being able to execute the malicious PDF, an attacker was able to deliver a weaponized PDF, potentially through phishing or social engineering, and a victim user downloaded the file and attempted to open it. These are significant security issues that must be addressed through a cyber incident response process.
+
+
+
+
+
+
+
+
+
+
+
+Review
+Well done, you have completed the Threat Vectors and Attack Surfaces Practice Lab.
+
+In this lab, you discovered unnecessary open ports on a domain server and mitigated the vulnerability, discovered and then disabled a Guest account on the Domain Controller, and identified indicators of attack on a user workstation.
+
+Summary
+You completed the following exercises:
+
+Exercise 1 - Open Service Ports
+Exercise 2 - Default Credentials
+Exercise 3 - Vulnerable Applications
+You should now be able to:
+
+Discover Unnecessary Open Ports
+Close Unnecessary Open Ports
+Discover the Guest Account
+Disable the Guest Account
+Discover a Recently Installed Application
+Simulate an Attack on the Vulnerable Application
+Observe Indicators of Attack
+
+
+
+
+
+
+
