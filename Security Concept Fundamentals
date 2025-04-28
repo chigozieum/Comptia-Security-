@@ -75,3 +75,691 @@ Networking Basics:
 Fundamental concepts such as IP addressing, DNS, and routing. A good grasp of networking is vital because Linux administrators frequently manage network configurations and troubleshoot connectivity issues.
 Bash Scripting:
 The practice of writing scripts using the Bash shell to automate repetitive tasks. Scripting skills enhance efficiency and are highly valued in any Linux administration role.
+
+
+
+
+
+
+Lab Topology
+During your session, you will have access to the following lab configuration.
+
+Practice Labs screenshot.
+
+Depending on the exercises, you may or may not use all of the devices, but they are shown here in the layout to get an overall understanding of the topology of the lab.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+ACIDM01 - Windows Server 2022 - Domain Member Server
+ACIWIN11 - Windows 11 PRO - Domain Member Workstation
+ACIALMA - Alma Linux 9.1 - Stand-alone Linux Server
+ACIKALI - Kali Purple 2023.1 - Stand-alone Linux Workstation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exercise 1 - Configure RAID 1
+RAID 1 is a configuration that focuses on redundancy and data protection, enabling availability. It involves duplicating data across two or more disk drives to ensure integrity and availability in the event of a drive failure, which is also called resilience. RAID 1 is commonly used in scenarios where data integrity and high availability are critical, such as small business servers, database servers, and system drives.
+
+In this exercise, you will protect a critical folder with a RAID 1 configuration on the ACIWIN11 machine.
+
+Learning Outcomes
+After completing this exercise, you should be able to:
+
+Create Two Unformatted VHDs
+Configure RAID 1 across the Unallocated Disks
+Your Devices
+You will be using the following devices in this lab. Please power these on now.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+ACIWIN11 - Windows 11 PRO - Domain Member Workstation
+Task 1 - Create Two Unformatted VHDs
+To support a RAID 1 configuration, a minimum of two disks must be available.
+
+In this task, you will create and initialize two VHDs in preparation for RAID 1 configuration on ACIWIN11.
+
+Step 1
+Connect to ACIWIN11.
+
+Click the Start charm and type the following:
+
+create and format hard disk partitions
+Select Create and format hard disk partitions from the Best match pop-up menu.
+
+Figure 1.1 Screenshot of ACIWN11: Displaying the desktop, selecting the Start charm and opening the Create and format hard disk partitions application.
+Figure 1.1 Screenshot of ACIWN11: Displaying the desktop, selecting the Start charm and opening the Create and format hard disk partitions application.
+Step 2
+In Disk Management, click the Action menu.
+
+Select Create VHD from the drop-down menu.
+
+Figure 1.2 Screenshot of ACIWIN11: Displaying Disk Management, selecting Action, then selecting Create VHD.
+Figure 1.2 Screenshot of ACIWIN11: Displaying Disk Management, selecting Action, then selecting Create VHD.
+Step 3
+In the Create and Attach Virtual Hard disk window, select Browse next to the Location field.
+
+Figure 1.3 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and selecting Browse.
+Figure 1.3 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and selecting Browse.
+Step 4
+In the Browse Virtual Disk files window, navigate to This PC > Local Disk (C:).
+
+Figure 1.4 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and navigating to Local Disk (C:).
+Figure 1.4 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and navigating to Local Disk (C:).
+Step 5
+In the Browse Virtual Disk files window, select New Folder.
+
+Figure 1.5 Screenshot of ACIWIN11: Displaying the Browse Virtual Diks files window and selecting New Folder.
+Figure 1.5 Screenshot of ACIWIN11: Displaying the Browse Virtual Diks files window and selecting New Folder.
+Step 6
+In the Browse Virtual Disk files window, rename the newly created folder as follows:
+
+VHDs
+Press Enter.
+
+Figure 1.6 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and labeling the new folder as VHDs.
+Figure 1.6 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and labeling the new folder as VHDs.
+Step 7
+In the Browse Virtual Disk files window, double-click on the VHDs folder.
+
+Type the following in the File name section:
+
+VHD1
+Press Save.
+
+Figure 1.7 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and creating the VHD1 file in the VHDs folder.
+Figure 1.7 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and creating the VHD1 file in the VHDs folder.
+Step 8
+In the Create and Attach Virtual Hard Disk window, select GB from the dropdown menu and enter the following in the Virtual hard disk size field:
+
+5
+Figure 1.8 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and establishing a 5GB virtual disk size for the VHD.
+Figure 1.8 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and establishing a 5GB virtual disk size for the VHD.
+Step 9
+In the Create and Attach Virtual Hard Disk window, select OK.
+
+Figure 1.9 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and selecting OK.
+Figure 1.9 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and selecting OK.
+Note: Observe that a Not Initialized Disk 2 has been created in Disk Management. This will be one of two Disks that will be used for the RAID 1 configuration.
+Step 10
+In Disk Management, select Action and then select Create VHD from the drop-down menu.
+
+Figure 1.10 Screenshot of ACIWIN11: Displaying Disk Management, selecting Action, then selecting Create VHD.
+Figure 1.10 Screenshot of ACIWIN11: Displaying Disk Management, selecting Action, then selecting Create VHD.
+Step 11
+In the Create and Attach Virtual Hard disk window, select Browse next to the Location field.
+
+Figure 1.11 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and selecting Browse.
+Figure 1.11 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window and selecting Browse.
+Step 12
+In the Browse Virtual Disk files window, ensure you are in the newly created VHDs folder.
+
+Enter the following into the File name field and then select Save:
+
+VHD2
+Figure 1.12 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and creating the VHD2 file.
+Figure 1.12 Screenshot of ACIWIN11: Displaying the Browse Virtual Disk files window and creating the VHD2 file.
+Step 13
+In the Create and Attach Virtual Hard Disk window, select GB from the drop-down menu and enter the following in the Virtual hard disk size field:
+
+5
+Click OK.
+
+Figure 1.13 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window, establishing the Virtual hard disk size of 5GB and selecting OK.
+Figure 1.13 Screenshot of ACIWIN11: Displaying the Create and Attach Virtual Hard Disk window, establishing the Virtual hard disk size of 5GB and selecting OK.
+Step 14
+Observe Disk Management to see Disk 2 and Disk 3 have been created. This is the minimum number of disks required for a RAID 1 configuration.
+
+Figure 1.14 Screenshot of ACIWIN11: Displaying the Disk Management window, showing the newly created Disk 2 and Disk 3.
+Figure 1.14 Screenshot of ACIWIN11: Displaying the Disk Management window, showing the newly created Disk 2 and Disk 3.
+Leave the devices in their current state and proceed to the next task.
+Task 2 - Configure RAID 1 across the Unallocated Disks
+Windows has the capability of creating software-based RAID configurations without the need for a hardware RAID controller.
+
+In this task, you will configure RAID 1 across the two VHDs that were created in Task 1.
+
+Step 1
+Connect to ACIWIN11.
+
+Click the Start charm and type the following:
+
+manage storage spaces
+Select Manage Storage Spaces from the Best match pop-up menu.
+
+Figure 1.15 Screenshot of ACIWIN11: Displaying the desktop, selecting the Start charm, and opening Manage Storage Spaces.
+Figure 1.15 Screenshot of ACIWIN11: Displaying the desktop, selecting the Start charm, and opening Manage Storage Spaces.
+Step 2
+In the Storage Spaces window, click the Create a new pool and storage space link.
+
+Figure 1.16 Screenshot of ACIWIN11: Displaying the Storage Spaces window and selecting Create a new pool and storage space.
+Figure 1.16 Screenshot of ACIWIN11: Displaying the Storage Spaces window and selecting Create a new pool and storage space.
+Note: Observe that both Disks 2 and 3 are selected. If many disks were available, this is where specific disks would be selected to be a part of a pool.
+Step 3
+In the Create a storage pool - Select drives to create a storage pool window, select Create pool.
+
+Figure 1.17 Screenshot of ACIWIN11: Displaying the Create a storage pool - Select drives to create a storage pool window and selecting Create pool.
+Figure 1.17 Screenshot of ACIWIN11: Displaying the Create a storage pool - Select drives to create a storage pool window and selecting Create pool.
+Step 4
+In the Create a storage space window, type the following in the Name field:
+
+RAID 1 VOL
+Figure 1.18 Screenshot of ACIWIN11: Displaying the Create a storage space window and naming the drive RAID 1 VOL.
+Figure 1.18 Screenshot of ACIWIN11: Displaying the Create a storage space window and naming the drive RAID 1 VOL.
+Step 5
+In the Create a storage space window, type the following into the Size (maximum) field:
+
+8.74
+Figure 1.19 Screenshot of ACIWIN11: Displaying the Create a storage space window and setting 8.74 GB as the Size of the drive.
+Figure 1.19 Screenshot of ACIWIN11: Displaying the Create a storage space window and setting 8.74 GB as the Size of the drive.
+Step 6
+In the Create a storage space window, select Create storage space.
+
+Figure 1.20 Screenshot of ACIWIN11: Displaying the Create a storage space window and selecting Create storage space.
+Figure 1.20 Screenshot of ACIWIN11: Displaying the Create a storage space window and selecting Create storage space.
+Note: On the Storage Spaces window, observe the RAID VOL 1 is listed as OK, indicating it is working and configured correctly.
+Step 7
+From the Taskbar, restore the Disk Management application.
+
+Figure 1.21 Screenshot of ACIWIN11: Displaying the taskbar and selecting the Disk Management application.
+Figure 1.21 Screenshot of ACIWIN11: Displaying the taskbar and selecting the Disk Management application.
+Note: In the Disk Management window, observe that Disks 2 and 3 are no longer listed, but a new Disk 4 (RAID 1 VOL) is present. This is the mirrored drive that was created. In Windows, Disks 2 and 3 are mirrored and represented by Disk 4. When data is moved to Disk 4, it is replicated to Disks 2 and 3.
+Step 8
+In the Taskbar, click the File Explorer icon.
+
+Figure 1.22 Screenshot of ACIWIN11: Displaying opening File Explorer from the Taskbar.
+Figure 1.22 Screenshot of ACIWIN11: Displaying opening File Explorer from the Taskbar.
+Step 9
+In File Explorer, navigate to ACIHDD (D:).
+
+Figure 1.23 Screenshot of ACIWIN11: Displaying the File Explorer and navigating to the D: drive.
+Figure 1.23 Screenshot of ACIWIN11: Displaying the File Explorer and navigating to the D: drive.
+Step 10
+In File Explorer, right-click on the Module_1_Folder and select Copy.
+
+Figure 1.24 Screenshot of ACIWIN11: Displaying the File Explorer and copying the Module_1_Folder.
+Figure 1.24 Screenshot of ACIWIN11: Displaying the File Explorer and copying the Module_1_Folder.
+Step 11
+In File Explorer, navigate to RAID VOL 1 (E:).
+
+Figure 1.25 Screenshot of ACIWIN11: Displaying the File Explorer and navigating to Drive E:.
+Figure 1.25 Screenshot of ACIWIN11: Displaying the File Explorer and navigating to Drive E:.
+Step 12
+In File Explorer, right-click on the screen and select Paste.
+
+Figure 1.26 Screenshot of ACIWIN11: Displaying the File Explorer and pasting the Module_1_Folder to drive E.
+Figure 1.26 Screenshot of ACIWIN11: Displaying the File Explorer and pasting the Module_1_Folder to drive E.
+Step 13
+The Module_1_Folder has been replicated to the RAID 1 VOL. This is in preparation for the next exercise, establishing FIM on this folder. The copying of the folder is not required for FIM configuration. It is done in this case to link together Exercise 1 and Exercise 2 by using the RAID 1 VOL that was created for this exercise.
+
+Figure 1.26 Screenshot of ACIWIN11: Displaying the File Explorer, showing the Module_1_Folder in drive E.
+Figure 1.26 Screenshot of ACIWIN11: Displaying the File Explorer, showing the Module_1_Folder in drive E.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exercise 2 - Configure and Test File Integrity Monitoring
+File Integrity Monitoring ensures the integrity of files through a file signature baseline, continuous monitoring, change detection, and alert generation.
+
+In this exercise, you will use the open-source security platform Wazuh to configure File Integrity Monitoring and test it to observe what the logs show when there are unexpected changes to the files and directory being monitored.
+
+Learning Outcomes
+After completing this exercise, you should be able to:
+
+Prepare the SIEM Manager
+Install an Agent on ACIWIN11 and Configure FIM
+Test FIM
+Your Devices
+You will be using the following devices in this lab. Please power these on now.
+
+ACIDC01 - Windows Server 2022 - Domain Controller
+ACIWIN11 - Windows 11 PRO - Domain Member Workstation
+ACIALMA - Alma Linux 9.1 - Stand-alone Linux Server
+Task 1 - Prepare the SIEM Manager
+Wazuh is an open-source security monitoring platform with SIEM capabilities. It is designed to monitor and analyze security events and incidents across the information technology infrastructure, provide real-time threat detection, incident response, and compliance management. The Wazuh Manager, already installed on ACIALMA, is the central hub for collecting and analyzing security-related data.
+
+In this task, you will prepare the Wazuh Manager on ACIALMA for operation.
+
+Step 1
+Connect to ACIALMA.
+
+Click the Activities menu on the Taskbar.
+
+Figure 2.1 Screenshot of ACIALMA: Displaying the desktop and selecting the Activities menu.
+Figure 2.1 Screenshot of ACIALMA: Displaying the desktop and selecting the Activities menu.
+Due to inactivity, you may be required to enter the  password: Passw0rd.
+Step 2
+In the Activities menu, select Terminal.
+
+Figure 2.2 Screenshot of ACIALMA: Displaying the Activities menu and selecting the Terminal.
+Figure 2.2 Screenshot of ACIALMA: Displaying the Activities menu and selecting the Terminal.
+Step 3
+In the Terminal window, type the following and then press Enter:
+
+sudo systemctl status wazuh-manager
+Figure 2.3 Screenshot of ACIALMA: Displaying the Terminal window and checking the status of the wazuh-manager.
+Figure 2.3 Screenshot of ACIALMA: Displaying the Terminal window and checking the status of the wazuh-manager.
+Step 4
+In the Terminal window, type the following password and press Enter:
+
+Passw0rd
+Figure 2.4 Screenshot of ACIALMA: Displaying the Terminal and typing in the sudo password.
+Figure 2.4 Screenshot of ACIALMA: Displaying the Terminal and typing in the sudo password.
+If the Terminal does not immediately return to a command prompt, use Ctrl+C to return to a prompt.
+Step 5
+Observe that the wazuh-manager is inactive and disabled.
+
+In the Terminal window, type the following and press Enter:
+
+sudo systemctl start wazuh-manager
+Figure 2.5 Screenshot of ACIALMA: Displaying the Terminal and starting the wazuh-manager.
+Figure 2.5 Screenshot of ACIALMA: Displaying the Terminal and starting the wazuh-manager.
+Step 6
+In the Terminal window, type the following and press Enter:
+
+sudo systemctl status wazuh-manager
+Figure 2.6 Screenshot of ACIALMA: Displaying the Terminal and checking the status of the wazuh-manager.
+Figure 2.6 Screenshot of ACIALMA: Displaying the Terminal and checking the status of the wazuh-manager.
+Step 7
+Observe the wazuh-manager is active (running). It remains disabled, which indicates the service will not start automatically on reboot.
+
+In the Taskbar, select the Activities menu.
+
+Figure 2.7 Screenshot of ACIALMA: Displaying the Taskbar and selecting the Activities menu.
+Figure 2.7 Screenshot of ACIALMA: Displaying the Taskbar and selecting the Activities menu.
+Step 8
+In the Activities menu, select Firefox.
+
+Figure 2.8 Screenshot of ACIALMA: Displaying the Activities menu and selecting Firefox.
+Figure 2.8 Screenshot of ACIALMA: Displaying the Activities menu and selecting Firefox.
+Step 9
+In Firefox, type the following into the address bar and then press Enter:
+
+https://192.168.0.4/
+Figure 2.9 Screenshot of ACIALMA: Displaying Firefox and typing in the URL for 192.168.0.4.
+Figure 2.9 Screenshot of ACIALMA: Displaying Firefox and typing in the URL for 192.168.0.4.
+Step 10
+In Firefox, select Log in on the wazuh log in page.
+
+Figure 2.10 Screenshot of ACIALMA: Displaying Firefox and logging in to wazuh.
+Figure 2.10 Screenshot of ACIALMA: Displaying Firefox and logging in to wazuh.
+Step 11
+Observe the wazuh checks that are done during initialization. The wazuh manager will load when these checks are complete.
+
+Figure 2.11 Screenshot of ACIALMA: Displaying the wazuh webpage.
+Figure 2.11 Screenshot of ACIALMA: Displaying the wazuh webpage.
+Leave the devices in their current state and proceed to the next task.
+Task 2 - Install an Agent on ACIWIN11 and Configure FIM
+While the Wazuh Manager is a hub for data collection, a Wazuh Agent resides on a host and provides data to the Wazuh Manager for analysis. The agent conducts local data collection and enables real-time monitoring, scalability, and context about the machine it resides on.
+
+In this task, you will install a Wazuh Agent on ACIWIN11 and configure Wazuh for File Integrity Monitoring.
+
+Step 1
+Ensure you are connected to  and the Firefox browser is open on the wazuh - Modules page.
+
+Click the Add agent link.
+
+Figure 2.12 Screenshot of ACIALMA: Displaying the wazuh dashboard and selecting Add agent.
+Figure 2.12 Screenshot of ACIALMA: Displaying the wazuh dashboard and selecting Add agent.
+Note: Observe that the Total agents listed is zero. ACIWIN11 will be added as an agent to provide input into the manager. The PowerShell command that will be used at ACIWIN11 to add it as an agent is generated within the wazuh manager.
+Step 2
+On Firefox, on the Deploy a new agent page, select Windows.
+
+Figure 2.13 Screenshot of ACIALMA: Displaying the Deploy a new agent page and selecting Windows.
+Figure 2.13 Screenshot of ACIALMA: Displaying the Deploy a new agent page and selecting Windows.
+Step 3
+On Firefox, on the Deploy a new agent page, scroll down to Step 4 and type in the following for the Wazuh server address field:
+
+192.168.0.4
+Figure 2.14 Screenshot of ACIALMA: Displaying the Deploy a new agent page and typing in the Wazuh server IP address.
+Figure 2.14 Screenshot of ACIALMA: Displaying the Deploy a new agent page and typing in the Wazuh server IP address.
+Step 4
+On Firefox, on the Deploy a new agent page, scroll down to Step 5 and type in the following for the Assign an agent name field:
+
+ACIWIN11
+Figure 2.15 Screenshot of ACIALMA: Displaying the Deploy an agent page and assigning the agent name of ACIWIN11.
+Figure 2.15 Screenshot of ACIALMA: Displaying the Deploy an agent page and assigning the agent name of ACIWIN11.
+Step 5
+On Firefox, on the Deploy a new agent page, scroll down and select default from the dropdown menu labeled Select one or more existing groups.
+
+Figure 2.16 Screenshot of ACIALMA: Displaying the Deploy an agent page and selecting the default group.
+Figure 2.16 Screenshot of ACIALMA: Displaying the Deploy an agent page and selecting the default group.
+Step 6
+Scroll to the bottom of step 6 and observe the PowerShell command that has been generated. This is the command that will be entered in ACIWIN11 to install and configure the agent. Also, notice step 7, which provides the PowerShell command to start the agent once it has been installed and configured on ACIWIN11.
+
+Figure 2.17 Screenshot of ACIALMA: Displaying the Deploy an agent page and viewing the PowerShell commands in Steps 6 and 7.
+Figure 2.17 Screenshot of ACIALMA: Displaying the Deploy an agent page and viewing the PowerShell commands in Steps 6 and 7.
+Step 7
+Connect to  .
+
+Click the Start charm and type the following:
+
+powershell
+Select Windows PowerShell > Run as Administrator from the Best match pop-up menu.
+
+Figure 2.18 Screenshot of ACIWIN11: Displaying the Taskbar, selecting, Start and opening PowerShell as an Administrator.
+Figure 2.18 Screenshot of ACIWIN11: Displaying the Taskbar, selecting, Start and opening PowerShell as an Administrator.
+Step 8
+In PowerShell, type the following and then press Enter:
+
+Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.5.0-1.msi -OutFile ${env:tmp}\wazuh-agent.msi; msiexec.exe /i ${env:tmp}\wazuh-agent.msi /q WAZUH_MANAGER='192.168.0.4' WAZUH_REGISTRATION_SERVER='192.168.0.4' WAZUH_AGENT_GROUP='default' WAZUH_AGENT_NAME='ACIWIN11'
+Figure 2.19 Screenshot of ACIWIN11: Displaying PowerShell and entering the command to install the wazuh agent.
+Figure 2.19 Screenshot of ACIWIN11: Displaying PowerShell and entering the command to install the wazuh agent.
+Note: As a note, for a large command like this, the lab does have the ability to move a file between virtual machines through the web browser Intranet page in the MyFiles tab. So, the command generated at ACIALMA could be saved to a text file and transferred to ACIWIN11 through the Intranet MyFiles tab.
+Step 9
+In PowerShell, type the following and press Enter:
+
+NET START WazuhSvc
+Figure 2.20 Screenshot of ACIWIN11: Displaying PowerShell and starting the wazuh agent.
+Figure 2.20 Screenshot of ACIWIN11: Displaying PowerShell and starting the wazuh agent.
+Step 10
+Observe that the service starts successfully.
+
+Figure 2.21 Screenshot of ACIWIN11: Displaying PowerShell and showing the successful starting of the wazuh agent.
+Figure 2.21 Screenshot of ACIWIN11: Displaying PowerShell and showing the successful starting of the wazuh agent.
+Step 11
+Connect to ACIALMA.
+
+On Firefox, click the Go to home page icon on the wazuh page.
+
+Figure 2.22 Screenshot of ACIALMA: Displaying Firefox and selecting Go to home page on the wazuh page.
+Figure 2.22 Screenshot of ACIALMA: Displaying Firefox and selecting Go to home page on the wazuh page.
+Step 12
+Observe there is now 1 Total Agent. This is ACIWIN11, which has just been installed.
+
+Figure 2.23 Screenshot of ACIALMA: Displaying the wazuh page and showing the total agent as 1.
+Figure 2.23 Screenshot of ACIALMA: Displaying the wazuh page and showing the total agent as 1.
+Step 13
+Connect to ACIWIN11.
+
+Click the Start charm and type the following:
+
+manage agent
+Select the Manage Agent app from the Best match pop-up menu.
+
+Figure 2.24 Screenshot of ACIWIN11: Displaying the Taskbar, selecting start and opening the Manage Agent app.
+Figure 2.24 Screenshot of ACIWIN11: Displaying the Taskbar, selecting start and opening the Manage Agent app.
+Note: Observe that the Wazuh Agent Manager has both an IP address and an Authentication key from the configuration. An authentication key for this application ensures security and is part of a zero-trust environment.
+Step 14
+On the Wazuh Agent Manager window, click View and then select View Config from the dropdown menu.
+
+Figure 2.25 Screenshot of ACIWIN11: Displaying the Wazuh Agent Manager window and selecting View, then View Config.
+Figure 2.25 Screenshot of ACIWIN11: Displaying the Wazuh Agent Manager window and selecting View, then View Config.
+Step 15
+On the ossec.conf - Notepad window, scroll down to the <!--File Integrity Monitoring -->, then the <!--Default files to be monitored --> section and type the following before the first <ignore> tag:
+
+<directories check_all="yes" realtime="yes" report_changes="yes">e:\Module_1_Folder</directories>
+Figure 2.26 Screenshot of ACIWIN11: Displaying notepad and typing in a FIM configuration.
+Figure 2.26 Screenshot of ACIWIN11: Displaying notepad and typing in a FIM configuration.
+Note: It is important to identify Drive E, which is the RAID 1 VOL drive since this is the drive that will be tested for FIM.
+Step 16
+On the ossec.conf - Notepad window, click File, then Save.
+
+Figure 2.27 Screenshot of ACIWIN11: Displaying Notepad and selecting File, then Save.
+Figure 2.27 Screenshot of ACIWIN11: Displaying Notepad and selecting File, then Save.
+Step 17
+Close the ossec.conf - Notepad window.
+
+Figure 2.28 Screenshot of ACIWIN11: Displaying closing the ossec.conf - Notepad window.
+Figure 2.28 Screenshot of ACIWIN11: Displaying closing the ossec.conf - Notepad window.
+Step 18
+On the Wazuh Agent Manager window, select Manage and then Restart.
+
+Figure 2.29 Screenshot of ACIWIN11: Displaying the Wazuh Agent Manager and selecting Manage, then Restart.
+Figure 2.29 Screenshot of ACIWIN11: Displaying the Wazuh Agent Manager and selecting Manage, then Restart.
+Step 19
+On the Agent Restarted pop-up window, click OK.
+
+Figure 2.30 Screenshot of ACIWIN11: Displaying the Agent Restarted pop-up and selecting OK.
+Figure 2.30 Screenshot of ACIWIN11: Displaying the Agent Restarted pop-up and selecting OK.
+Leave the devices in their current state and proceed to the next task.
+Task 3 - Test FIM
+Now that FIM is configured, it should be tested. Testing ensures proper configuration and expected response.
+
+In this task, you will create a file in the monitored folder, modify a file in the monitored folder and observe the Wazuh Manager reporting, indicating the changes.
+
+Step 1
+Connect to ACIWIN11.
+
+Open File Explorer from the Taskbar.
+
+Figure 2.31 Screenshot of ACIWIN11: Displaying the Taskbar and selecting File Explorer.
+Figure 2.31 Screenshot of ACIWIN11: Displaying the Taskbar and selecting File Explorer.
+Step 2
+In File Explorer, navigate to RAID 1 VOL (E:) and double-click to open the Module_1_Folder.
+
+Figure 2.32 Screenshot of ACIWIN11: Displaying File Explore and opening the E:\Module_1_Folder.
+Figure 2.32 Screenshot of ACIWIN11: Displaying File Explore and opening the E:\Module_1_Folder.
+Step 3
+In File Explorer, right-click on the screen and select New, then Text Document.
+
+Figure 2.33 Screenshot of ACIWIN11: Displaying File Explorer and creating a new Text Document.
+Figure 2.33 Screenshot of ACIWIN11: Displaying File Explorer and creating a new Text Document.
+Step 4
+In File Explorer, type the following to rename the new Text Document, then press Enter.
+
+FIM_Check
+Figure 2.34 Screenshot of ACIWIN11: Displaying File Explorer and renaming the new text document.
+Figure 2.34 Screenshot of ACIWIN11: Displaying File Explorer and renaming the new text document.
+Step 5
+In File Explorer, double-click on the FIM_Check.txt file.
+
+Figure 2.35 Screenshot of ACIWIN11: Displaying File Explorer and opening the FIM_Check file.
+Figure 2.35 Screenshot of ACIWIN11: Displaying File Explorer and opening the FIM_Check file.
+Step 6
+In the FIM_Check - Notepad window, type the following:
+
+This is a FIM check file!
+Figure 2.36 Screenshot of ACIWIN11: Displaying Notepad and entering text into the FIM_Check file.
+Figure 2.36 Screenshot of ACIWIN11: Displaying Notepad and entering text into the FIM_Check file.
+Step 7
+In FIM_Check - Notepad, select File and then Save.
+
+Figure 2.37 Screenshot of ACIWIN11: Displaying Notepad and saving the modified FIM_Check file.
+Figure 2.37 Screenshot of ACIWIN11: Displaying Notepad and saving the modified FIM_Check file.
+Step 8
+Close the FIM_Check - Notepad file.
+
+Figure 2.38 Screenshot of ACIWIN11: Displaying closing the FIM_Check - Notepad file.
+Figure 2.38 Screenshot of ACIWIN11: Displaying closing the FIM_Check - Notepad file.
+Step 9
+Connect to ACIALMA.
+
+In Firefox, on the wazuh page, select Integrity monitoring.
+
+Figure 2.39 Screenshot of ACIALMA: Displaying the wazuh page and selecting Integrity monitoring.
+Figure 2.39 Screenshot of ACIALMA: Displaying the wazuh page and selecting Integrity monitoring.
+Step 10
+In Firefox, on the wazuh Integrity Monitoring page, select the Events tab.
+
+Figure 2.40 Screenshot of ACIALMA: Displaying the Integrity Monitoring page and selecting the Events tab.
+Figure 2.40 Screenshot of ACIALMA: Displaying the Integrity Monitoring page and selecting the Events tab.
+Step 11
+Note: Observe the entries from when the file was added, deleted (old file deleted, new file with new name created), and modified.
+
+Figure 2.41 Screenshot of ACIALMA: Displaying the Integrity Monitoring - Events tab.
+Figure 2.41 Screenshot of ACIALMA: Displaying the Integrity Monitoring - Events tab.
+Step 12
+Connect to ACIWIN11.
+
+In File Explorer, right-click on the M1_Notepad.txt file and select Open.
+
+Figure 2.42 Screenshot of ACIWIN11: Displaying File Explorer and opening the M1_Notepad file.
+Figure 2.42 Screenshot of ACIWIN11: Displaying File Explorer and opening the M1_Notepad file.
+Step 13
+In M1_Notepad - Notepad, select a single character and delete it.
+
+Figure 2.43 Screenshot of ACIWIN11: Displaying M1_Notepad - Notepad and deleting a single character from the file.
+Figure 2.43 Screenshot of ACIWIN11: Displaying M1_Notepad - Notepad and deleting a single character from the file.
+Step 14
+In M1_Notepad - Notepad, select File and then Save.
+
+Figure 2.44 Screenshot of ACIWIN11: Displaying M1_Notepad - Notepad and saving the modified file.
+Figure 2.44 Screenshot of ACIWIN11: Displaying M1_Notepad - Notepad and saving the modified file.
+Step 15
+Close the M1_Notepad.txt file.
+
+Figure 2.45 Screenshot of ACIWIN11: Displaying closing the M1_Notepad - Notepad file.
+Figure 2.45 Screenshot of ACIWIN11: Displaying closing the M1_Notepad - Notepad file.
+Step 16
+Connect to ACIALMA.
+
+In Firefox, on the wazuh page, click on the Reload current page icon.
+
+Figure 2.46 Screenshot of ACIALMA: Displaying Firefox and selecting the Reload current page icon.
+Figure 2.46 Screenshot of ACIALMA: Displaying Firefox and selecting the Reload current page icon.
+Step 17
+In Firefox, on the wazuh Integrity Monitoring page, select the Events tab.
+
+Figure 2.47 Screenshot of ACIALMA: Displaying Integrity Monitoring page and selecting the Events tab.
+Figure 2.47 Screenshot of ACIALMA: Displaying Integrity Monitoring page and selecting the Events tab.
+Step 18
+Observe the top (newest) entry, which shows an Integrity checksum changed in the m1_notepad.txt file.
+
+The FIM implementation has been successfully tested with an addition of a file to the directory being monitored and a change to a file already in the directory being monitored.
+
+Figure 2.47 Screenshot of ACIALMA: Displaying the Integrity Monitoring - Events tab.
+Figure 2.47 Screenshot of ACIALMA: Displaying the Integrity Monitoring - Events tab.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Review
+Well done, you have completed the Security Concept Fundamentals Practice Lab.
+
+In this lab, Windows 11 RAID capability and the Wazuh security platform were used to demonstrate how to apply the security fundamentals of integrity and availability. Along with Confidentiality, these concepts are the pillars and promise of cyber security.
+
+Summary
+You completed the following exercises:
+
+Exercise 1 - Configure RAID 1
+Exercise 2 - Configure and Test File Integrity Monitoring
+You should now be able to:
+
+Create Two Unformatted VHDs
+Configure RAID 1 across the Unallocated Disks
+Prepare the SIEM Manager
+Install an Agent on ACIWIN11 and Configure FIM
+Test FIM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
